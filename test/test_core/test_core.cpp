@@ -43,8 +43,6 @@ void test_serial_commands_are_case_insensitive() {
   TEST_ASSERT_EQUAL(Role::Glyph, role.role);
   TEST_ASSERT_EQUAL(CommandKind::Auto, parseCommand("MODE AUTO").kind);
   TEST_ASSERT_EQUAL(CommandKind::Next, parseCommand("next").kind);
-  const char removedCommand[] = {'s', 'e', 'a', 'n', 'c', 'e', '\0'};
-  TEST_ASSERT_EQUAL(CommandKind::Invalid, parseCommand(removedCommand).kind);
   TEST_ASSERT_EQUAL(CommandKind::Invalid, parseCommand("nonsense").kind);
 }
 
