@@ -26,7 +26,6 @@ Command parseCommand(const char* line) {
   if (equals(line, "status")) return {CommandKind::Status, Role::Acolyte};
   if (twoWords(line, "mode", "auto")) return {CommandKind::Auto, Role::Acolyte};
   if (twoWords(line, "mode", "manual")) return {CommandKind::Manual, Role::Acolyte};
-  if (equals(line, "seance")) return {CommandKind::Seance, Role::Acolyte};
   if (equals(line, "next")) return {CommandKind::Next, Role::Acolyte};
   if (twoWords(line, "role", "acolyte")) return {CommandKind::Role, Role::Acolyte};
   if (twoWords(line, "role", "glyph")) return {CommandKind::Role, Role::Glyph};
