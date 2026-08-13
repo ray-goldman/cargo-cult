@@ -12,16 +12,17 @@ py -m platformio run -e esp32dev
 py -m platformio run -e defmon-wroom
 ```
 
-For a generic board, explicitly choose its upload port:
+Upload to the serial port assigned to your board:
 
 ```powershell
-py -m platformio run -e esp32dev -t upload --upload-port COM7
+py -m platformio run -e esp32dev -t upload --upload-port <serial-port>
 ```
 
-The `defmon-wroom` profile targets the DEFMON ESP-WROOM on `COM5`. Flashing
-replaces its current firmware, so make a backup before uploading.
+For the optional OLED/button hardware profile, use `defmon-wroom` in place of
+`esp32dev`. Flashing replaces the board's current firmware, so make a backup
+before uploading.
 
-## DEFMON wiring
+## Optional OLED/button wiring
 
 - SSD1306 OLED: SDA **GPIO 21**, SCL **GPIO 22**, address `0x3C`.
 - Next-phase button: **GPIO 26**, active low (internal pull-up enabled).
@@ -48,12 +49,17 @@ seance
 next
 ```
 
-Automatic mode advances Acolyte, Glyph, Elder, Cthulhu, and Seance every 60
-seconds. `next` also works from the DEFMON GPIO 26 button.
+Automatic mode advances every phase at 60-second intervals. The normal-role
+phases are Acolyte, Glyph, Elder, and Cthulhu; the Seance phase is diagnostic
+only on classic ESP32/WROOM hardware. `next` also works from the optional GPIO
+26 button.
 
 ## Compatibility
 
-Classic ESP32 hardware has one legacy advertising set. Therefore Acolyte and
-classic ESP32 Seance peers are **sequential rather than simultaneous**: each
-phase uses three 20-second peer slots. A board with multiple advertising sets is
-needed for simultaneous peer emulation.
+| Platform | Normal roles | Seance |
+| --- | --- | --- |
+| Classic ESP32 / ESP-WROOM | Supported: Acolyte, Glyph, Elder, and Cthulhu rotate with unique static-random identities. | **Not supported.** A WROOM has one legacy advertising set and cannot present the required peers simultaneously. |
+| ESP32 with multiple concurrent advertising sets | Depends on the board-specific implementation. | Requires a multi-advertisement implementation; this WROOM firmware does not provide it. |
+
+The `seance` serial command is included for diagnostics, but it does not create
+a functional Seance on classic ESP32/WROOM hardware.
