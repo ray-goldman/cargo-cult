@@ -1,5 +1,7 @@
 # Cargo Cult
 
+Cargo Cult emulates normal roles for the Cult of Cthulhu DEF CON 34 indie badge, letting badge owners continue and complete their badge experience after DEF CON 34 on normal-role ESP32/WROOM hardware.
+
 Cargo Cult is a serial-first BLE role emulator for classic ESP32 boards. It uses
 one legacy advertisement at a time and rotates static-random peer identities.
 
