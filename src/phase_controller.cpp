@@ -6,11 +6,11 @@ Phase nextPhase(Phase phase) {
     case Phase::Acolyte: return Phase::Glyph;
     case Phase::Glyph: return Phase::Elder;
     case Phase::Elder: return Phase::Cthulhu;
-    case Phase::Cthulhu: return Phase::Seance;
-    default: return Phase::Acolyte;
+    case Phase::Cthulhu: return Phase::Acolyte;
   }
+  return Phase::Acolyte;
 }
-bool hasSlots(Phase phase) { return phase == Phase::Acolyte || phase == Phase::Seance; }
+bool hasSlots(Phase phase) { return phase == Phase::Acolyte; }
 Role phaseRole(Phase phase) {
   switch (phase) {
     case Phase::Glyph: return Role::Glyph;
@@ -44,12 +44,10 @@ bool PhaseController::tick(uint32_t now) {
 
 void PhaseController::next(uint32_t now) { phase_ = nextPhase(phase_); slot_ = 0; startedAt_ = now; }
 void PhaseController::setRole(Role role, uint32_t now) { phase_ = role == Role::Acolyte ? Phase::Acolyte : role == Role::Glyph ? Phase::Glyph : role == Role::Elder ? Phase::Elder : Phase::Cthulhu; slot_ = 0; startedAt_ = now; automatic_ = false; }
-void PhaseController::setSeance(uint32_t now) { phase_ = Phase::Seance; slot_ = 0; startedAt_ = now; automatic_ = false; }
 void PhaseController::setAutomatic(uint32_t now) { automatic_ = true; slot_ = 0; startedAt_ = now; }
 void PhaseController::setManual() { automatic_ = false; }
 Phase PhaseController::phase() const { return phase_; }
 Role PhaseController::role() const { return phaseRole(phase_); }
-bool PhaseController::seance() const { return phase_ == Phase::Seance; }
 bool PhaseController::automatic() const { return automatic_; }
 uint8_t PhaseController::slot() const { return slot_; }
 uint32_t PhaseController::remainingMs(uint32_t now) const { return automatic_ ? (now - startedAt_ >= phaseMs_ ? 0 : phaseMs_ - (now - startedAt_)) : 0; }

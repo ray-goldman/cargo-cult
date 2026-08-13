@@ -28,8 +28,7 @@ bool oledOk = false;
 #endif
 
 Role activeRole() {
-  if (!controller.seance()) return controller.role();
-  return controller.slot() == 0 ? Role::Glyph : controller.slot() == 1 ? Role::Elder : Role::Cthulhu;
+  return controller.role();
 }
 
 void draw() {
@@ -48,8 +47,7 @@ void draw() {
 void startAdvertisement() {
   const Role role = activeRole();
   const RoleIdentity identity = rotation.current(role);
-  const char* tag = controller.seance() ? "SEAN" : nullptr;
-  if (ble.advertise(role, identity, tag)) {
+  if (ble.advertise(role, identity)) {
     rotation.advance(role);
     if (CARGO_STATUS_LED >= 0) digitalWrite(CARGO_STATUS_LED, HIGH);
     Serial.print("role="); Serial.print(profileFor(role).displayName); Serial.print(" peer="); Serial.print(identity.name);
@@ -69,12 +67,11 @@ void status() {
 void apply(Command command) {
   const uint32_t now = millis();
   switch (command.kind) {
-    case CommandKind::Help: Serial.println("help status mode auto|manual role acolyte|glyph|elder|cthulhu seance next"); return;
+    case CommandKind::Help: Serial.println("help status mode auto|manual role acolyte|glyph|elder|cthulhu next"); return;
     case CommandKind::Status: status(); return;
     case CommandKind::Auto: controller.setAutomatic(now); break;
     case CommandKind::Manual: controller.setManual(); status(); return;
     case CommandKind::Role: controller.setRole(command.role, now); break;
-    case CommandKind::Seance: controller.setSeance(now); break;
     case CommandKind::Next: controller.next(now); break;
     default: Serial.println("invalid command"); return;
   }

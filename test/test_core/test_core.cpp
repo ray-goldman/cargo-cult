@@ -20,19 +20,21 @@ void test_identity_pool_is_static_random_and_unique() {
   TEST_ASSERT_EQUAL_STRING("GLPB", profileFor(Role::Glyph).tag);
 }
 
-void test_acolyte_and_seance_use_three_twenty_second_slots() {
+void test_acolyte_uses_three_twenty_second_slots() {
   PhaseController controller;
   TEST_ASSERT_EQUAL_UINT8(0, controller.slot());
   TEST_ASSERT_TRUE(controller.tick(20000));
   TEST_ASSERT_EQUAL_UINT8(1, controller.slot());
   TEST_ASSERT_TRUE(controller.tick(40000));
   TEST_ASSERT_EQUAL_UINT8(2, controller.slot());
+}
+
+void test_cthulhu_cycles_to_acolyte_after_sixty_seconds() {
+  PhaseController controller;
+  controller.setRole(Role::Cthulhu, 0);
+  controller.setAutomatic(0);
   TEST_ASSERT_TRUE(controller.tick(60000));
-  TEST_ASSERT_EQUAL(Phase::Glyph, controller.phase());
-  controller.setSeance(70000);
-  TEST_ASSERT_TRUE(controller.seance());
-  TEST_ASSERT_TRUE(controller.tick(90000));
-  TEST_ASSERT_EQUAL_UINT8(1, controller.slot());
+  TEST_ASSERT_EQUAL(Phase::Acolyte, controller.phase());
 }
 
 void test_serial_commands_are_case_insensitive() {
@@ -47,7 +49,8 @@ void test_serial_commands_are_case_insensitive() {
 void setup() {
   UNITY_BEGIN();
   RUN_TEST(test_identity_pool_is_static_random_and_unique);
-  RUN_TEST(test_acolyte_and_seance_use_three_twenty_second_slots);
+  RUN_TEST(test_acolyte_uses_three_twenty_second_slots);
+  RUN_TEST(test_cthulhu_cycles_to_acolyte_after_sixty_seconds);
   RUN_TEST(test_serial_commands_are_case_insensitive);
   UNITY_END();
 }
